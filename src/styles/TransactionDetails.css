@@ -79,7 +79,7 @@
 /* 4. The Sort Dropdown */
 .sort-select {
     flex-shrink: 0; /* Prevents the dropdown from squishing */
-    width: 180px;
+    width: 190px;
     padding: 12px 15px;
     padding-right: 40px; /* Space for the custom arrow */
     border: 1px solid #444;
