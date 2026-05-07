@@ -1,0 +1,77 @@
+/* Categories.css */
+
+/* The main container holding all categories */
+.categories-wrapper {
+  max-width: 1000px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Adds space between each category card */
+}
+
+/* The category heading */
+.category-title {
+  display: flex;                /* 1. Enable Flexbox */
+  justify-content: space-between; /* 2. Push items to far left and right */
+  align-items: center;          /* 3. Keep them vertically centered */
+  
+  font-size: 1.25rem;
+  color: #ddd;
+  margin-top: 0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  text-transform: capitalize;
+}
+
+/* Specific styling for the total amount */
+.category-total {
+  color: #ddd;
+  font-size: 1.25rem;
+}
+
+/* Update the card background for Dark Theme support */
+.category-group {
+  background-color:#121212;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+/* The list container holding the EditTransaction components */
+.category-transaction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between individual transactions */
+}
+
+/* Container for View More / View Less buttons */
+.view-buttons-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+/* Styling for View More / View Less buttons */
+.view-btn {
+  background-color: #333;
+    color: #ddd;
+    border: 1px solid #444;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+ background-color: #44E610;
+  border-color: #44E610;
+  color: black;
+}

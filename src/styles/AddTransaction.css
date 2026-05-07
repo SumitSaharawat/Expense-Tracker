@@ -1,0 +1,130 @@
+/* Container for the overall component */
+.transaction-container {
+  text-align: center;
+  border: 1px solid #333;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 600px;
+  background-color: #121212;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Container for the Initial Budget Setup */
+.budget-setup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 30px;
+  background-color: #121212;
+  border-radius: 12px;
+  border: 2px dashed #44E610; /* Dashed border suggests 'setup' mode */
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.budget-setup-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ddd;
+  margin: 0;
+}
+
+/* Specific styling for the budget input to make it feel bigger */
+.budget-input {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  font-size: 1.2rem;
+  text-align: center;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #1f1f1f;
+  color: #ddd;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.budget-input:focus {
+  border-color: #44E610;
+  box-shadow: 0 0 8px rgba(68, 230, 16, 0.2);
+}
+
+/* Header section with Budget and Expense */
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.balance-text {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ddd;
+}
+
+/* Common button styling */
+.btn-primary {
+  background-color: #44E610;
+  color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #3bcf0d;
+  transform: translateY(-2px);
+}
+
+/* Form Styling */
+.input-field {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  box-sizing: border-box; /* Prevents overflow */
+  background-color: #1f1f1f;
+  color: #ddd;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: #44E610;
+}
+
+/* Category Chips */
+.category-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0 25px 0;
+}
+
+.chip {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  background-color: #1f1f1f;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.chip.active {
+  border-color: #44E610;
+  background-color: rgba(68, 230, 16, 0.1);
+  color: #44E610;
+  font-weight: bold;
+}
+
+.full-width {
+  width: 100%;
+}

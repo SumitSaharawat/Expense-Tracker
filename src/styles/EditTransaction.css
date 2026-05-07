@@ -1,0 +1,77 @@
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 12px 20px;
+    margin-bottom: 8px;
+    background-color: #1f1f1f; 
+    border: 1px solid #333;
+    border-left: 10px solid #ddd; 
+    color: #ddd; 
+    border-radius: 8px;
+    list-style: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bg-Entertainment { border-left-color: #6f42c1; } 
+.bg-Food { border-left-color: #28a745; }       
+.bg-Utilities { border-left-color: #007bff; }          
+.bg-Transport { border-left-color: #e83e8c; }          
+.bg-Housing { border-left-color: #ffc107; }
+
+.transaction-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.transaction-info {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    font-weight: 500;
+    color: #ddd;
+    margin-right: 20px;
+}
+
+.edit-input {
+    border-radius: 4px;
+    padding: 5px 10px;
+    border: 1px solid #44E610;
+    outline: none;
+    background-color: #1f1f1f;
+    color: white;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* Base button style */
+.action-btn {
+    border-radius: 5px;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.action-btn:hover {
+    opacity: 0.8;
+}
+
+/* Button variants */
+.btn-save { background-color: #28a745; }
+.btn-cancel { background-color: #6c757d; }
+.btn-remove { background-color: #dc3545; }
+.btn-edit { background-color: #fd7e14; }

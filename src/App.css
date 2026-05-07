@@ -1,0 +1,84 @@
+/* App.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Prevents padding from adding to width/height */
+}
+
+.light-theme{
+  margin: 0;
+  background-color: white; 
+  color: #121212;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow: auto;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+.dark-theme{
+  margin: 0;
+  background-color: #121212; 
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  overflow: auto;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* The wrapper div from your App.jsx */
+.theme-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 4. Header & Navigation */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+}
+
+nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+nav a:hover {
+  background-color: rgba(68, 230, 16, 0.1);
+  transform: scale(1.1);
+}
+
+/* 5. The Theme Button */
+.theme-btn {
+  padding: 8px 12px;
+  border-radius: 50px;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.theme-btn:hover {
+  background-color: rgba(68, 230, 16, 0.1);
+  transform: scale(1.1);
+}

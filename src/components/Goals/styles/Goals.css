@@ -1,0 +1,244 @@
+/* Goals.css */
+
+/* 1. Main Layout Container 
+   Changed max-width to accommodate two 400px cards + gap.
+   Removed 'margin: auto' to keep it pinned to the left. */
+.goals-container {
+    max-width: 900px; 
+    margin: 20px 0; 
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Keeps the 'Add' button and list left-aligned */
+}
+
+/* 2. Primary Buttons 
+   Standardized styling for the 'Add New Goal' and 'Create Goal' buttons. */
+.btn-goals, .btn-primary {
+    background-color: #44E610;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-goals {
+    margin-bottom: 20px;
+}
+
+.btn-goals:hover, .btn-primary:hover {
+    background-color: #3bcf0d;
+    transform: translateY(-2px);
+}
+
+.full-width {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* 3. Goal Creation Form */
+.goal-form-container {
+    background-color: #121212;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px; /* Keeps the form size manageable */
+}
+
+.input-field {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background-color: #1f1f1f;
+    color: #ddd;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.input-field:focus {
+    border-color: #44E610;
+}
+
+/* 4. The Grid System 
+   This handles the "2 in a row" logic. */
+.goal-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Allows cards to wrap to the next line */
+    gap: 20px;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+/* 5. Individual Goal Card 
+   Set to 400px as requested. */
+.goal-card {
+    background-color: #1f1f1f;;
+    color: #ddd;
+    width: 400px;
+    border: 1px solid #333;
+    border-left: 5px solid #44E610;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.goal-card:hover {
+    transform: translateY(-3px);
+}
+
+/* 6. Card Header & Progress */
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.goal-name {
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: #ddd;
+}
+
+.goal-amount {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #44E610;
+}
+
+.progress-container {
+    background: #333;
+    height: 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: #44E610;
+    height: 100%;
+    transition: width 0.4s ease;
+}
+
+/* 7. Card Body & Footer */
+.goal-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.goal-note {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.goal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #333;
+}
+
+.goal-date {
+    font-size: 0.75rem;
+    color: #999;
+    font-style: italic;
+}
+
+/* Delete Button (Garbage Icon) */
+.btn-delete {
+    background: none;
+    color: #ff4d4d; /* Matches the cancel button red */
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete:hover {
+    background-color: rgba(255, 77, 77, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 8. Add Funds Mini-Form */
+.add-funds-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-input {
+    width: 70px;
+    padding: 6px;
+    border: 1px solid #444;
+    background-color: #1f1f1f;
+    color: #ddd;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.mini-input:focus {
+    border-color: #44E610;
+}
+
+.btn-small {
+    background-color: #333;
+    color: #ddd;
+    border: 1px solid #444;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+    background-color: #44E610;
+    border-color: #44E610;
+    color: black;
+}
+
+.btn-cancel-small {
+    color: #ff4d4d;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.goal-error {
+    position: absolute;
+    bottom: 5px;
+    right: 20px;
+    color: #ff4d4d;
+    font-weight: bold;
+    margin: 0;
+    font-size: 0.8rem;
+    text-align: right;
+}
