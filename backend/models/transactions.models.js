@@ -1,0 +1,25 @@
+const mongoose = require('mongoose');
+
+const transactionSchema = new mongoose.Schema({
+    money: {
+    type: Number,
+    required: true,
+    },
+    text: {
+    type: String,
+    required: true,
+    },
+    category: {
+    type: String,
+    required: true,
+    },
+    notes: {
+    type: String,
+    },
+    date: {
+    type: Date,
+    default: Date.now,
+    },
+});
+
+module.exports = mongoose.model('Transaction', transactionSchema);
