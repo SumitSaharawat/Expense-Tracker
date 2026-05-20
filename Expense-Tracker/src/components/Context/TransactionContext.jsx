@@ -1,13 +1,25 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import axios from 'axios';
+
 
 const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
-  // Initialize transactions from local storage, or default to an empty array
-  const [transaction, setTransaction] = useState(() => {
-        const savedTransactions = localStorage.getItem("my_transactions");
-        return savedTransactions ? JSON.parse(savedTransactions) : [];
-    });
+
+  // Initialize transactions from backend
+  const [transaction, setTransaction] = useState([]);
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/transactions');
+        setTransaction(response.data);
+        } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+    fetchTransactions();
+  }, []);
+
 
   // Controls the visibility of the "Add Transaction" input form
   const [showInput, setShowInput] = useState(false);
@@ -106,7 +118,6 @@ const getCategoryTotal = (category) => {
 
 // Automatically sync state changes to localStorage to persist data across page reloads
 useEffect(() => {
-        localStorage.setItem("my_transactions", JSON.stringify(transaction));
         localStorage.setItem("myBudgetInput", JSON.stringify(budgetInput));
         localStorage.setItem("myBudget", JSON.stringify(budget));
         localStorage.setItem("myGoals", JSON.stringify(goals));
