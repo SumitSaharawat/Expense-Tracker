@@ -28,6 +28,7 @@ function App() {
             </nav>
           </header>
 
+          //Routes for navbar
           <div className="content-area">
             <Routes>
               {/* HOME PAGE: Summary and Adding functionality */}
