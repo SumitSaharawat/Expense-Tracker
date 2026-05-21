@@ -1,11 +1,12 @@
 import { use, useState } from "react";
 import './styles/Goals.css';
 import GoalItem from "./GoalItem";
-import { useTransactions } from "../Context/TransactionContext";
+import { useBudget } from "../Context/BudgetContext";
+import axios from "axios";
 
 const Goals = () => {
 
-    const { goals, setGoals } = useTransactions();
+    const { goals, setGoals } = useBudget();
 
     const [goalsform, setgoalsForms] = useState(false);
     const [name, setName] = useState("");
@@ -13,37 +14,48 @@ const Goals = () => {
     const [note, setNote] = useState("");
 
 
-    const handleGoals = () => {
+    const handleGoals = async () => {
         if (!name || !amount) return;
-        const newGoal = {
-            name: name,
-            amount: Number(amount),
-            saved: 0,
-            note: note,
-            createdAt: new Date().toISOString(),
-            id: Date.now()
-        };
-        setGoals([...goals, newGoal]);
+
+        try{
+            const response = await axios.post('http://localhost:8000/api/goals', {
+                name: name,
+                amount: Number(amount),
+                saved: 0,
+                note: note,
+                createdAt: new Date().toISOString(),
+            });
+            setGoals([...goals, response.data]);
+        }catch (error){
+            console.error("Error adding goal:", error.message);
+        }
+        
         setgoalsForms(false);
         // Clear form
         setName(""); setAmount(""); setNote("");
     };
 
     // This function targets a specific goal by ID and updates its saved total
-    const updateGoalAmount = (id, money) => {
-        const goalToUpdate = goals.find(g => g.id === id);
+    const updateGoalAmount = async (id, money) => {
+        const goalToUpdate = goals.find(g => g._id === id);
         
         if (goalToUpdate && (goalToUpdate.saved + money > goalToUpdate.amount)) {
             return; // Exit early, do not update the state
         }
 
+        // Note: You will eventually want an await axios.put() call here to save this to MongoDB!
         setGoals(prevGoals => prevGoals.map(g => 
-            g.id === id ? { ...g, saved: Number(g.saved) + money } : g
+            g._id === id ? { ...g, saved: Number(g.saved) + money } : g
         ));
     };
 
-    const deleteGoal = (id) => {
-        setGoals(goals.filter(g => g.id !== id));
+    const deleteGoal = async (id) => {
+        try{
+            await axios.delete(`http://localhost:8000/api/goals/${id}`);
+            setGoals(goals.filter(g => g._id !== id));
+        } catch (error) {
+            console.error("Error deleting goal:", error.message);
+        }
     };
 
     return (
@@ -66,9 +78,9 @@ const Goals = () => {
             )}
 
             <div className="goal-list">
-                {goals.map((goal, index) => (
+                {goals.map((goal) => (
                     <GoalItem 
-                        key={goal.id || index} 
+                        key={goal._id} 
                         goal={goal} 
                         onUpdateSaved={updateGoalAmount} 
                         deleteGoal={deleteGoal}

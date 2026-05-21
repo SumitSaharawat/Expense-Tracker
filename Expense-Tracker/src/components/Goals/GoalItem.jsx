@@ -18,7 +18,7 @@ const GoalItem = ({ goal, onUpdateSaved, deleteGoal }) => {
         }
 
         setError(""); // Clear any previous errors
-        onUpdateSaved(goal.id, Number(amountToAdd));
+        onUpdateSaved(goal._id, Number(amountToAdd));
         setAmountToAdd(""); // Clear input
         setShowInput(false); // Close mini-form
     };
@@ -44,8 +44,8 @@ const GoalItem = ({ goal, onUpdateSaved, deleteGoal }) => {
             <div className="goal-body">
                 <p className="goal-note">{goal.note}</p>
                 <div className="goal-footer">
-                    <span className="goal-date">{new Date(goal.createdAt).toLocaleDateString()}</span>
-                    <button className="btn-delete" onClick={() => deleteGoal(goal.id)} title="Delete Goal">
+                    <span className="goal-date">{goal.createdAt}</span>
+                    <button className="btn-delete" onClick={() => deleteGoal(goal._id)} title="Delete Goal">
                         <FaTrash />
                     </button>
                     
