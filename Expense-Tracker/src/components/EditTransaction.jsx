@@ -39,7 +39,7 @@ const EditTransaction = ({ transaction, deleteTransaction, updateText }) => {
             ) : (
                 <>
                     <div className="transaction-info">
-                        <span>{transaction.date}</span>
+                        <span>{new Date(transaction.date).toLocaleDateString()}</span>
                         <span>{transaction.text}</span>
                         <span>₹{transaction.money}</span>
                         <span>{transaction.notes}</span>
