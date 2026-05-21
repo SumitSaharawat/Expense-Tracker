@@ -7,12 +7,14 @@ import BudgetInitialization from './components/BudgetInitialization';
 import Categories from './components/Categories/Categories';
 import Goals from './components/Goals/Goal';
 import { TransactionProvider } from './components/Context/TransactionContext';
+import { BudgetProvider } from './components/Context/BudgetContext';
 
 function App() {
   const [toggle, setToggle] = useState(true);
   const toggleTheme = () => setToggle(!toggle);
   return (
     <TransactionProvider>
+      <BudgetProvider>
       <BrowserRouter>
         <div className={toggle ? "dark-theme" : "light-theme"}>
           <header className="main-header">
@@ -28,7 +30,6 @@ function App() {
             </nav>
           </header>
 
-          //Routes for navbar
           <div className="content-area">
             <Routes>
               {/* HOME PAGE: Summary and Adding functionality */}
@@ -62,6 +63,7 @@ function App() {
           </div>
         </div>
       </BrowserRouter>
+      </BudgetProvider>
     </TransactionProvider>
   )
 }

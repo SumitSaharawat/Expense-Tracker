@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useTransactions } from "./Context/TransactionContext";
+import { useBudget } from "./Context/BudgetContext";
+import axios from "axios";
 import "../styles/AddTransaction.css"
 
 const AddTransaction = () => {
 
-  const { transaction, setTransaction, showInput, setShowInput, categories, budget, totalExpense } = useTransactions();
+  const { transaction, setTransaction, showInput, setShowInput, categories } = useTransactions();
+  const { budget, totalExpense } = useBudget();
 
   const [amount, setAmount] = useState("");
   const [detail, setDetail] = useState("");
@@ -12,7 +15,7 @@ const AddTransaction = () => {
   const [notes, setNotes] = useState("");
   const [error, setError] = useState("");
 
-  const handleTransaction = () => {
+  const handleTransaction = async(formdata) => {
     setError(""); // Clear any previous errors
 
     if (!amount || !category) {
@@ -24,16 +27,16 @@ const AddTransaction = () => {
         return;
     }
 
-    const newTransaction = {
-      money: Number(amount),
-      text: detail,
-      id: Date.now(),
-      category: category,
-      notes: notes,
-      date: new Date().toISOString().split('T')[0]
-    };
-
-    setTransaction([...transaction, newTransaction]);
+    try {
+        const response = await axios.post('http://localhost:8000/api/transactions', {
+            money: Number(amount),
+            text: detail,
+            category: category,
+            notes: notes,});
+            setTransaction([...transaction, response.data]);
+        } catch (error){
+            console.error("Error adding transaction:", error.message);
+        }
     
     // Reset form
     setAmount("");

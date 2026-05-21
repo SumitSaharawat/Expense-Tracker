@@ -3,9 +3,45 @@ import EditTransaction from "./EditTransaction";
 import "../styles/TransactionDetails.css"; 
 import { useTransactions } from "./Context/TransactionContext";
 
+const TransactionFilters = ({ searchInput, setSearchInput, filter, setFilter, selected, setSelected }) => (
+    <div className="controls-row">
+        <div className="search-wrapper">
+            <input
+                className="search-input"
+                type="text"
+                placeholder="Search transactions..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+            />
+            <button className="search-icon-btn" aria-label="Search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+        </div>
+        <select className="sort-select" value={filter} onChange={(e) => setFilter(e.target.value)}>
+            <option value="" disabled>Select a Category</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="housing">Housing</option>
+            <option value="utilities">Utilities</option>
+            <option value="transport">Transport</option>
+            <option value="food">Food</option>
+            <option value="other">Other</option>
+        </select>
+        <select className="sort-select" value={selected} onChange={(e) => setSelected(e.target.value)}>
+            <option value="" disabled>Select an option</option>
+            <option value="highToLow">HighToLow</option>
+            <option value="lowTohigh">LowToHigh</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+        </select>
+    </div>
+);
+
 const TransactionDetails = () => {
 
-    const { transaction, deleteTransaction, updateText, form } = useTransactions();
+    const { transaction, deleteTransaction, updateText } = useTransactions();
     const [searchInput, setSearchInput] = useState("");
     const [selected, setSelected] = useState("");
     const [filter, setFilter] = useState("");
@@ -38,50 +74,12 @@ const TransactionDetails = () => {
                     <h3 className="transactions-count">{filteredTransaction.length} of {transaction.length} Transactions</h3>
                 </div>
 
-                <div className="controls-row">
-                    <div className="search-wrapper">
-                        <input
-                            className="search-input"
-                            type="text"
-                            placeholder="Search transactions..."
-                            value={searchInput}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                        />
-
-                        <button className="search-icon-btn" aria-label="Search">
-                            <svg 
-                                width="20" height="20" viewBox="0 0 24 24" fill="none" 
-                                stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                            >
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <select className="sort-select" value={filter} onChange={(e) => setFilter(e.target.value)}>
-                        <option value="" disabled>Select a Category</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="housing">Housing</option>
-                        <option value="utilities">Utilities</option>
-                        <option value="transport">Transport</option>
-                        <option value="food">Food</option>
-                        <option value="other">Other</option>
-                    </select>
-
-                    <select className="sort-select" value={selected} onChange={(e) => setSelected(e.target.value)}>
-                        <option value="" disabled>Select an option</option>
-                        <option value="highToLow">HighToLow</option>
-                        <option value="lowTohigh">LowToHigh</option>
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                    </select>
-                </div>
+                <TransactionFilters searchInput={searchInput} setSearchInput={setSearchInput} filter={filter} setFilter={setFilter} selected={selected} setSelected={setSelected} />
 
 
                 {filteredTransaction.map((item) => (
                     <EditTransaction 
-                        key={item.id} 
+                        key={item._id} 
                         transaction={item} 
                         deleteTransaction={deleteTransaction} 
                         updateText={updateText}

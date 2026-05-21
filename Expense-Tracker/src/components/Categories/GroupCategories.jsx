@@ -17,7 +17,7 @@ const GroupCategories = ({ category, transactions, deleteTransaction, updateText
                 <ul className="category-transaction-list">
                     {visibleTransaction.length > 0 && visibleTransaction.map((item) => (
                         <EditTransaction 
-                            key={item.id} 
+                            key={item._id} 
                             transaction={item} 
                             deleteTransaction={deleteTransaction} 
                             updateText={updateText}

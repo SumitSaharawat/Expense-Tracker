@@ -7,7 +7,7 @@ const EditTransaction = ({ transaction, deleteTransaction, updateText }) => {
     const [newText, setNewText] = useState(transaction.text);
 
     const handleSave = () => {
-        updateText(transaction.id, newText);
+        updateText(transaction._id, newText);
         setIsEditing(false);
     };
 
@@ -54,7 +54,7 @@ const EditTransaction = ({ transaction, deleteTransaction, updateText }) => {
                         </button>
                         <button 
                             className="action-btn btn-remove" 
-                            onClick={() => deleteTransaction(transaction.id)}
+                            onClick={() => deleteTransaction(transaction._id)}
                         >
                             Remove
                         </button>

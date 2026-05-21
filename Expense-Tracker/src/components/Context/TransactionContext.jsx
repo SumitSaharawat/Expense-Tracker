@@ -6,7 +6,7 @@ const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
 
-  // Initialize transactions from backend
+  // Fetching transactions from MongoDB backend
   const [transaction, setTransaction] = useState([]);
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -27,38 +27,29 @@ export const TransactionProvider = ({ children }) => {
   // Standardized categories for transactions
   const categories = ["Entertainment", "Food", "Utilities", "Transport", "Housing", "Other"];
   
-  // Initialize goals from local storage
-  const [goals, setGoals] = useState(() => {
-    const savedGoals = localStorage.getItem("myGoals");
-    return savedGoals ? JSON.parse(savedGoals) : [];
-  });
-  
-  // Initialize total monthly budget from local storage
-  const [budget, setBudget] = useState(() => {
-    const saved = localStorage.getItem("myBudget");
-    return saved ? JSON.parse(saved) : 0;
-  });
-  
-  // Tracks whether the initial budget setup view should be shown
-  const [budgetInput, setBudgetInput] = useState(() => {
-    const savedBudgetInput = localStorage.getItem("myBudgetInput");
-    return savedBudgetInput !== null ? JSON.parse(savedBudgetInput) : true;
-  });
- 
-  // Derived state: Calculate total expense and remaining budget based on current transactions
-  const totalExpense = transaction.reduce((acc, item) => acc + item.money , 0);
-  const currentBudget = (budget - totalExpense <= 0) ? 0 : (budget - totalExpense);
+  // Added missing UI form state
+  const [form, setForm] = useState(false); 
 
   // Helper to remove a transaction by its unique ID
-  const deleteTransaction = (idToDelete) => {
-        setTransaction(transaction.filter((item) => item.id !== idToDelete));
+  const deleteTransaction = async(idToDelete) => {
+    try {
+        await axios.delete(`http://localhost:8000/api/transactions/${idToDelete}`);
+    } catch (error) {
+        console.error("Error deleting transaction:", error.message);
+    }    
+    setTransaction(transaction.filter((item) => item._id !== idToDelete));
   };
 
   // Helper to update a transaction's description text
-  const updateText = (id, newText) => {
-        setTransaction(transaction.map((item) => 
-            item.id === id ? { ...item, text: newText } : item
-        ));
+  const updateText = async(id, newText) => {
+      try {
+          await axios.put(`http://localhost:8000/api/transactions/${id}`, { text: newText });
+          setTransaction(transaction.map((item) => 
+              item._id === id ? { ...item, text: newText } : item
+          ));
+      } catch (error) {
+          console.error("Error updating transaction:", error.message);
+      }
   };
 
   // Development helper: Populates the app with 100 randomized test transactions
@@ -86,16 +77,18 @@ export const TransactionProvider = ({ children }) => {
 //   seedMockData();
 // }, [])
 
-const getPastSevenDaysTotal = transaction
-    // Filter for transactions that occurred within the last 7 days
-    .filter(item => {
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-        return new Date(item.date) >= sevenDaysAgo;
-    })
-    // Sum up the filtered transactions
-    .reduce((acc, item) => acc + item.money, 0);
+const getPastSevenDaysTotal = () => {
+    return transaction
+        // Filter for transactions that occurred within the last 7 days
+        .filter(item => {
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+            return new Date(item.date) >= sevenDaysAgo;
+        })
+        // Sum up the filtered transactions
+        .reduce((acc, item) => acc + item.money, 0);
+};
 
 // Calculate total spendings from exactly one month ago to the start of today
 const getPastMonthTotal = (transaction) => {
@@ -116,24 +109,12 @@ const getCategoryTotal = (category) => {
     return transaction.filter(item => item.category === category).reduce((acc, item) => acc + item.money, 0);
   }
 
-// Automatically sync state changes to localStorage to persist data across page reloads
-useEffect(() => {
-        localStorage.setItem("myBudgetInput", JSON.stringify(budgetInput));
-        localStorage.setItem("myBudget", JSON.stringify(budget));
-        localStorage.setItem("myGoals", JSON.stringify(goals));
-    }, [transaction, budgetInput, budget, goals]);
-
-
   return (
     <TransactionContext.Provider value={{ 
         transaction, setTransaction,
-        goals, setGoals,
-        budget, setBudget,
         showInput, setShowInput,
-        budgetInput, setBudgetInput,
+        form, setForm,
         categories,
-        totalExpense,
-        currentBudget,
         deleteTransaction,
         updateText,
         seedMockData,
