@@ -44,9 +44,10 @@ const Goals = () => {
         }
 
         try{
-            await axios.put(`http://localhost:8000/api/goals/${id}`, { saved: money });
+            const newSavedAmount = Number(goalToUpdate.saved) + money;
+            await axios.put(`http://localhost:8000/api/goals/${id}`, { saved: newSavedAmount });
             setGoals(prevGoals => prevGoals.map(g => 
-            g._id === id ? { ...g, saved: Number(g.saved) + money } : g
+            g._id === id ? { ...g, saved: newSavedAmount } : g
             ));
         } catch (error) {
             console.error("Error updating goal:", error.message);
