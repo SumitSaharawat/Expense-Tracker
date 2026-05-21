@@ -38,15 +38,19 @@ const Goals = () => {
     // This function targets a specific goal by ID and updates its saved total
     const updateGoalAmount = async (id, money) => {
         const goalToUpdate = goals.find(g => g._id === id);
-        
+
         if (goalToUpdate && (goalToUpdate.saved + money > goalToUpdate.amount)) {
             return; // Exit early, do not update the state
         }
 
-        // Note: You will eventually want an await axios.put() call here to save this to MongoDB!
-        setGoals(prevGoals => prevGoals.map(g => 
+        try{
+            await axios.put(`http://localhost:8000/api/goals/${id}`, { saved: money });
+            setGoals(prevGoals => prevGoals.map(g => 
             g._id === id ? { ...g, saved: Number(g.saved) + money } : g
-        ));
+            ));
+        } catch (error) {
+            console.error("Error updating goal:", error.message);
+        }   
     };
 
     const deleteGoal = async (id) => {

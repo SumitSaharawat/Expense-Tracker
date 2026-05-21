@@ -21,6 +21,15 @@ const deleteGoal = async (req, res) => {
     }
 }
 
+const updateGoal = async (req, res) => {
+    try{
+        const goal = await goalsModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(goal);
+    }catch (error){
+        res.status(500).json({ message: error.message });
+    }
+}
+
 const getGoals = async (req, res) => {
     try{
         const goals = await goalsModel.find();
@@ -30,5 +39,5 @@ const getGoals = async (req, res) => {
     }
 }
 
-module.exports = { addGoal, deleteGoal, getGoals };
+module.exports = { addGoal, deleteGoal, updateGoal,getGoals };
 

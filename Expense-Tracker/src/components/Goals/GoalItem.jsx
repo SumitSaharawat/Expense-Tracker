@@ -44,7 +44,7 @@ const GoalItem = ({ goal, onUpdateSaved, deleteGoal }) => {
             <div className="goal-body">
                 <p className="goal-note">{goal.note}</p>
                 <div className="goal-footer">
-                    <span className="goal-date">{goal.createdAt}</span>
+                    <span className="goal-date">{new Date(goal.date).toLocaleDateString()}</span>
                     <button className="btn-delete" onClick={() => deleteGoal(goal._id)} title="Delete Goal">
                         <FaTrash />
                     </button>
