@@ -5,6 +5,8 @@ const cors = require('cors');
 const express = require('express');
 const trnsactionRoutes = require('./routes/transactions.routes.js');
 const goalsRoutes = require('./routes/goals.routes.js');
+const userRoutes = require('./routes/user.routes.js');
+
 
 const app = express();
 
@@ -14,6 +16,7 @@ app.use(express.json());
 
 app.use('/api', trnsactionRoutes);
 app.use('/api', goalsRoutes);
+app.use('/api/user', userRoutes);
 
 connectDB();
 
