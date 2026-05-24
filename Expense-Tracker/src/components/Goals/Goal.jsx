@@ -2,11 +2,13 @@ import { use, useState } from "react";
 import './styles/Goals.css';
 import GoalItem from "./GoalItem";
 import { useBudget } from "../Context/BudgetContext";
+import { useAuth } from "../Context/AuthContext";
 import axios from "axios";
 
 const Goals = () => {
 
     const { goals, setGoals } = useBudget();
+    const { user } = useAuth();
 
     const [goalsform, setgoalsForms] = useState(false);
     const [name, setName] = useState("");
@@ -24,6 +26,8 @@ const Goals = () => {
                 saved: 0,
                 note: note,
                 createdAt: new Date().toISOString(),
+            }, {
+                headers: { Authorization: `Bearer ${user?.token}` }
             });
             setGoals([...goals, response.data]);
         }catch (error){
@@ -45,7 +49,9 @@ const Goals = () => {
 
         try{
             const newSavedAmount = Number(goalToUpdate.saved) + money;
-            await axios.put(`http://localhost:8000/api/goals/${id}`, { saved: newSavedAmount });
+            await axios.put(`http://localhost:8000/api/goals/${id}`, { saved: newSavedAmount }, {
+                headers: { Authorization: `Bearer ${user?.token}` }
+            });
             setGoals(prevGoals => prevGoals.map(g => 
             g._id === id ? { ...g, saved: newSavedAmount } : g
             ));
@@ -56,7 +62,9 @@ const Goals = () => {
 
     const deleteGoal = async (id) => {
         try{
-            await axios.delete(`http://localhost:8000/api/goals/${id}`);
+            await axios.delete(`http://localhost:8000/api/goals/${id}`, {
+                headers: { Authorization: `Bearer ${user?.token}` }
+            });
             setGoals(goals.filter(g => g._id !== id));
         } catch (error) {
             console.error("Error deleting goal:", error.message);

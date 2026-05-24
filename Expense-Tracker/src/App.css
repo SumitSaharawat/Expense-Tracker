@@ -82,3 +82,38 @@ nav a:hover {
   background-color: rgba(68, 230, 16, 0.1);
   transform: scale(1.1);
 }
+
+/* Logout Button Styling */
+.logout-btn {
+  background-color: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  margin-left: 1rem;
+}
+
+.logout-btn:hover {
+  background-color: #ff4d4d;
+  color: #ffffff;
+}
+
+.logout-btn:active {
+  transform: translateY(1px);
+}
+
+/* Light Theme Overrides for Logout Button */
+.light-theme .logout-btn {
+  background-color: transparent;
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.light-theme .logout-btn:hover {
+  background-color: #dc3545;
+  color: #ffffff;
+}

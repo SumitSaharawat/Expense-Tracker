@@ -2,7 +2,11 @@ const transactionModel = require('../models/transactions.models');
 
 const addTransaction = async (req, res) => {
     try{
-        const newTransaction = await transactionModel.create(req.body);
+        const userId = req.user._id;
+        const newTransaction = await transactionModel.create({
+            ...req.body,
+            user: userId
+        });
         res.status(201).json(newTransaction);
     }catch (error) {
         res.status(500).json({ message: error.message });
@@ -11,7 +15,8 @@ const addTransaction = async (req, res) => {
 
 const getTransactions = async (req, res) => {
     try {
-        const transactions = await transactionModel.find();
+        const userId = req.user._id;
+        const transactions = await transactionModel.find({ user: userId });
         res.json(transactions);
     }catch(error){
         res.status(500).json({ message: error.message });

@@ -2,7 +2,11 @@ const goalsModel = require('../models/goals.models');
 
 const addGoal = async (req, res) => {
     try{
-        const newGoal = await goalsModel.create(req.body);
+        const userId = req.user._id;
+        const newGoal = await goalsModel.create({
+            ...req.body,
+            user:userId
+        });
         res.status(201).json(newGoal);
     }catch (error) {
         res.status(500).json({ message: error.message });
@@ -32,7 +36,8 @@ const updateGoal = async (req, res) => {
 
 const getGoals = async (req, res) => {
     try{
-        const goals = await goalsModel.find();
+        const userId = req.user._id;
+        const goals = await goalsModel.find({user: userId});
         res.json(goals);
     }catch (error){
         res.status(500).json({ message: error.message });

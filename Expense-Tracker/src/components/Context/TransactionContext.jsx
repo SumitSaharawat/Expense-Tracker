@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 import axios from 'axios';
 
 
@@ -6,19 +7,25 @@ const TransactionContext = createContext();
 
 export const TransactionProvider = ({ children }) => {
 
+  const { user } = useAuth();
+
   // Fetching transactions from MongoDB backend
   const [transaction, setTransaction] = useState([]);
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/transactions');
+        const response = await axios.get('http://localhost:8000/api/transactions', {
+            headers: { Authorization: `Bearer ${user?.token}` }
+        });
         setTransaction(response.data);
         } catch (error) {
         console.error('Error fetching transactions:', error);
       }
     };
-    fetchTransactions();
-  }, []);
+    if(user && user.Date){
+        fetchTransactions();
+    }
+  }, [user]);
 
 
   // Controls the visibility of the "Add Transaction" input form
@@ -33,7 +40,9 @@ export const TransactionProvider = ({ children }) => {
   // Helper to remove a transaction by its unique ID
   const deleteTransaction = async(idToDelete) => {
     try {
-        await axios.delete(`http://localhost:8000/api/transactions/${idToDelete}`);
+        await axios.delete(`http://localhost:8000/api/transactions/${idToDelete}`, {
+            headers: { Authorization: `Bearer ${user?.token}` }
+        });
     } catch (error) {
         console.error("Error deleting transaction:", error.message);
     }    
@@ -43,7 +52,9 @@ export const TransactionProvider = ({ children }) => {
   // Helper to update a transaction's description text
   const updateText = async(id, newText) => {
       try {
-          await axios.put(`http://localhost:8000/api/transactions/${id}`, { text: newText });
+          await axios.put(`http://localhost:8000/api/transactions/${id}`, { text: newText }, {
+              headers: { Authorization: `Bearer ${user?.token}` }
+          });
           setTransaction(transaction.map((item) => 
               item._id === id ? { ...item, text: newText } : item
           ));

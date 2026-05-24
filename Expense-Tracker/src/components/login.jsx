@@ -15,7 +15,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/login', { email, password });
+      const response = await axios.post('http://localhost:8000/api/user/login', { email, password });
       
       // response.data contains the { email, token } sent by your Express server
       login(response.data); 

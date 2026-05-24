@@ -20,7 +20,7 @@ const Signup = () => {
 
     try {
       // 1. Post registration data to your Express auth router
-      const response = await axios.post('http://localhost:8000/api/auth/signup', { 
+      const response = await axios.post('http://localhost:8000/api/user/signup', { 
         email, 
         password 
       });

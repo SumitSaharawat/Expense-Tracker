@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTransactions } from "./Context/TransactionContext";
 import { useBudget } from "./Context/BudgetContext";
+import { useAuth } from "./Context/AuthContext";
 import axios from "axios";
 import "../styles/AddTransaction.css"
 
@@ -8,6 +9,7 @@ const AddTransaction = () => {
 
   const { transaction, setTransaction, showInput, setShowInput, categories } = useTransactions();
   const { budget, totalExpense } = useBudget();
+  const { user } = useAuth();
 
   const [amount, setAmount] = useState("");
   const [detail, setDetail] = useState("");
@@ -32,18 +34,23 @@ const AddTransaction = () => {
             money: Number(amount),
             text: detail,
             category: category,
-            notes: notes,});
-            setTransaction([...transaction, response.data]);
-        } catch (error){
-            console.error("Error adding transaction:", error.message);
-        }
-    
-    // Reset form
-    setAmount("");
-    setDetail("");
-    setCategory("");
-    setError("");
-    setShowInput(false);
+            notes: notes,
+            date: new Date().toISOString(),
+        }, {
+            headers: { Authorization: `Bearer ${user?.token}` }
+        });
+        setTransaction([...transaction, response.data]);
+        
+        // Reset form on success
+        setAmount("");
+        setDetail("");
+        setCategory("");
+        setError("");
+        setShowInput(false);
+    } catch (error) {
+        console.error("Error adding transaction:", error.response?.data || error.message);
+        setError(error.response?.data?.message || error.response?.data?.error || "An error occurred while adding the transaction.");
+    }
   };
 
   return (

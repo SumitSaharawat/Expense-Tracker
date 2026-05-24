@@ -1,25 +1,30 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useTransactions } from './TransactionContext';
+import { useAuth } from './AuthContext';
 import axios from 'axios';
 
 const BudgetContext = createContext();
 
 export const BudgetProvider = ({ children }) => {
   const { transaction } = useTransactions();
-
+  const { user } = useAuth();
   const [goals, setGoals] = useState([]);
 
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/goals');
+        const response = await axios.get('http://localhost:8000/api/goals', {
+            headers: { Authorization: `Bearer ${user?.token}` }
+        });
         setGoals(response.data);
       } catch (error) {
         console.error('Error fetching goals:', error);
       }
     };
-    fetchGoals();
-  }, [])
+    if(user && user.Date){
+      fetchGoals();
+    }
+  }, [user]);
   
   const [budget, setBudget] = useState(() => {
     const saved = localStorage.getItem("myBudget");
