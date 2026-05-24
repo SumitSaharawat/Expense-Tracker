@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom';
 import AddTransaction from './components/AddTransaction'
 import TransactionDetails from './components/TransactionDetails'
 import BudgetInitialization from './components/BudgetInitialization';
@@ -8,63 +8,89 @@ import Categories from './components/Categories/Categories';
 import Goals from './components/Goals/Goal';
 import { TransactionProvider } from './components/Context/TransactionContext';
 import { BudgetProvider } from './components/Context/BudgetContext';
+import { AuthProvider, useAuth} from './components/Context/AuthContext';
+import ProtectedRoute from './components/protectedRoute';
+import Login from './components/login';
+import Signup from './components/signup';
 
-function App() {
+function AppContent() {
   const [toggle, setToggle] = useState(true);
+  const { user, logout } = useAuth(); // 👈 Pull user info and logout helper from global state
+  
   const toggleTheme = () => setToggle(!toggle);
+
   return (
-    <TransactionProvider>
-      <BudgetProvider>
-      <BrowserRouter>
-        <div className={toggle ? "dark-theme" : "light-theme"}>
-          <header className="main-header">
-            <h1>Expense-Tracker</h1>
-            <nav className="nav-bar">
+    <div className={toggle ? "dark-theme" : "light-theme"}>
+      <header className="main-header">
+        <h1>Expense-Tracker</h1>
+        <nav className="nav-bar">
+          {/* Only show application navigation links if a user is securely logged in */}
+          {user && (
+            <>
               <Link to="/" className="nav-link">Dashboard</Link>
               <Link to="/transactions" className="nav-link">Transactions</Link>
               <Link to="/categories" className="nav-link">Categories</Link>
               <Link to="/goals" className="nav-link">Goals</Link>
-              <button onClick={toggleTheme} className="theme-btn">
-                {toggle ? "☀️" : "🌙"}
-              </button>
-            </nav>
-          </header>
+              <button onClick={logout} className="logout-btn">Logout</button> 
+            </>
+          )}
+          <button onClick={toggleTheme} className="theme-btn">
+            {toggle ? "☀️" : "🌙"}
+          </button>
+        </nav>
+      </header>
 
-          <div className="content-area">
-            <Routes>
-              {/* HOME PAGE: Summary and Adding functionality */}
-              <Route path="/" element={
-                <>
-                  <BudgetInitialization/>
-                  <AddTransaction />
-                </>
-              } />
+      <div className="content-area">
+        <Routes>
+          {/* PUBLIC AUTH ROUTES: Redirect authenticated users back to Dashboard automatically */}
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
+          <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" replace />} />
 
-              {/* TRANSACTION PAGE: Filtering and List mapping */}
-              <Route path="/transactions" element={
-                <>
-                  <TransactionDetails/>
-                </>
-              } />
+          {/* PROTECTED ROUTES: Wrapped tightly inside the Route Guard component */}
+          <Route path="/" element={
+            <ProtectedRoute>
+              <BudgetInitialization />
+              <AddTransaction />
+            </ProtectedRoute>
+          } />
 
-              <Route path="/categories" element={
-                <>
-                  <Categories/>
-                </>
-              } />
+          <Route path="/transactions" element={
+            <ProtectedRoute>
+              <TransactionDetails />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/categories" element={
+            <ProtectedRoute>
+              <Categories />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/goals" element={
+            <ProtectedRoute>
+              <Goals />
+            </ProtectedRoute>
+          } />
 
-              <Route path="/goals" element={
-                <>
-                  <Goals />
-                </>
-              } />
+          {/* CATCH-ALL FALLBACK ROUTE */}
+          <Route path="*" element={<Navigate to={user ? "/" : "/signup"} replace />} />
+        </Routes>
+      </div>
+    </div>
+  );
+}
 
-            </Routes>
-          </div>
-        </div>
-      </BrowserRouter>
-      </BudgetProvider>
-    </TransactionProvider>
+function App() {
+  return (
+    <AuthProvider>
+      <TransactionProvider>
+        <BudgetProvider>
+          <BrowserRouter>
+            <AppContent /> {/* Houses inner structural routing nodes */}
+          </BrowserRouter>
+        </BudgetProvider>
+      </TransactionProvider>
+    </AuthProvider>
   )
 }
 
