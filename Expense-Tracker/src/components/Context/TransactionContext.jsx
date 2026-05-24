@@ -22,8 +22,11 @@ export const TransactionProvider = ({ children }) => {
         console.error('Error fetching transactions:', error);
       }
     };
-    if(user && user.Date){
+    
+    if (user && user.token) {
         fetchTransactions();
+    } else if (!user) {
+        setTransaction([]); // Clear transactions when user logs out
     }
   }, [user]);
 

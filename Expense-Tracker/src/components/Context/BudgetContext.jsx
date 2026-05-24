@@ -21,8 +21,11 @@ export const BudgetProvider = ({ children }) => {
         console.error('Error fetching goals:', error);
       }
     };
-    if(user && user.Date){
+    
+    if (user && user.token) {
       fetchGoals();
+    } else if (!user) {
+      setGoals([]); // Clear goals when user logs out
     }
   }, [user]);
   
