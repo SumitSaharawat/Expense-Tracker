@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    budget: {
+        type: Number,
+        default: 0,
+    },
 });
 
 userSchema.statics.signup = async function (email, password) {

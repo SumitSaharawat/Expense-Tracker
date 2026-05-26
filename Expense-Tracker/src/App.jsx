@@ -7,7 +7,7 @@ import BudgetInitialization from './components/BudgetInitialization';
 import Categories from './components/Categories/Categories';
 import Goals from './components/Goals/Goal';
 import { TransactionProvider } from './components/Context/TransactionContext';
-import { BudgetProvider } from './components/Context/BudgetContext';
+import { BudgetProvider, useBudget } from './components/Context/BudgetContext';
 import { AuthProvider, useAuth} from './components/Context/AuthContext';
 import ProtectedRoute from './components/protectedRoute';
 import Login from './components/login';
@@ -16,6 +16,7 @@ import Signup from './components/signup';
 function AppContent() {
   const [toggle, setToggle] = useState(true);
   const { user, logout } = useAuth(); // 👈 Pull user info and logout helper from global state
+  const { budgetInput } = useBudget();
   
   const toggleTheme = () => setToggle(!toggle);
 
@@ -27,10 +28,14 @@ function AppContent() {
           {/* Only show application navigation links if a user is securely logged in */}
           {user && (
             <>
-              <Link to="/" className="nav-link">Dashboard</Link>
-              <Link to="/transactions" className="nav-link">Transactions</Link>
-              <Link to="/categories" className="nav-link">Categories</Link>
-              <Link to="/goals" className="nav-link">Goals</Link>
+              {!budgetInput && (
+                <>
+                  <Link to="/" className="nav-link">Dashboard</Link>
+                  <Link to="/transactions" className="nav-link">Transactions</Link>
+                  <Link to="/categories" className="nav-link">Categories</Link>
+                  <Link to="/goals" className="nav-link">Goals</Link>
+                </>
+              )}
               <button onClick={logout} className="logout-btn">Logout</button> 
             </>
           )}
@@ -49,26 +54,32 @@ function AppContent() {
           {/* PROTECTED ROUTES: Wrapped tightly inside the Route Guard component */}
           <Route path="/" element={
             <ProtectedRoute>
-              <BudgetInitialization />
-              <AddTransaction />
+              {budgetInput ? (
+                <BudgetInitialization />
+              ) : (
+                <>
+                  <BudgetInitialization />
+                  <AddTransaction />
+                </>
+              )}
             </ProtectedRoute>
           } />
 
           <Route path="/transactions" element={
             <ProtectedRoute>
-              <TransactionDetails />
+              {budgetInput ? <Navigate to="/" replace /> : <TransactionDetails />}
             </ProtectedRoute>
           } />
           
           <Route path="/categories" element={
             <ProtectedRoute>
-              <Categories />
+              {budgetInput ? <Navigate to="/" replace /> : <Categories />}
             </ProtectedRoute>
           } />
           
           <Route path="/goals" element={
             <ProtectedRoute>
-              <Goals />
+              {budgetInput ? <Navigate to="/" replace /> : <Goals />}
             </ProtectedRoute>
           } />
 

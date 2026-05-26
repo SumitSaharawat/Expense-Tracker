@@ -4,34 +4,46 @@ import { useBudget } from "./Context/BudgetContext";
 import '../styles/BalanceSummary.css';
 import CategoryChart from "./CategoryChart";
 
-const BudgetSetup = ({ budget, setBudget, handleForms }) => (
-    <div className="budget-setup-container">
-        <h2 className="budget-setup-title">Welcome! Set your Monthly Budget</h2>
-        <input 
-            type="number"
-            className="budget-input"
-            placeholder="Enter amount"
-            value={budget || ""}
-            onChange={(e) => setBudget(Number(e.target.value))}
-        />
-        <button 
-            className="btn-primary full-width" 
-            style={{ maxWidth: '300px' }}
-            onClick={() => {
-                if(budget > 0) handleForms();
-                else alert("Please enter a valid budget");
-            }}
-        >
-            Save & Start Tracking
-        </button>
-    </div>
-);
+// 1. Updated BudgetSetup to use local component state for the input field
+const BudgetSetup = ({ handleBudgetSubmit, loading }) => {
+    const [inputVal, setInputVal] = useState("");
 
-const BudgetSummary = ({ currentBudget, totalExpense, showInput, setShowInput, handleWarning }) => (
+    return (
+        <div className="budget-setup-container">
+            <h2 className="budget-setup-title">Welcome! Set your Monthly Budget</h2>
+            <input 
+                type="number"
+                className="budget-input"
+                placeholder="Enter amount"
+                value={inputVal}
+                onChange={(e) => setInputVal(e.target.value)}
+                disabled={loading}
+            />
+            <button 
+                className="btn-primary full-width" 
+                style={{ maxWidth: '300px' }}
+                disabled={loading}
+                onClick={() => {
+                    const parsedAmount = Number(inputVal);
+                    if (parsedAmount > 0) {
+                        handleBudgetSubmit(parsedAmount);
+                    } else {
+                        alert("Please enter a valid budget");
+                    }
+                }}
+            >
+                {loading ? "Saving..." : "Save & Start Tracking"}
+            </button>
+        </div>
+    );
+};
+
+const BudgetSummary = ({ budget, currentBudget, totalExpense, showInput, setShowInput, handleWarning }) => (
     <div className="summary-container">
         <div className="balance-row">
+            {/* Added your absolute limit next to remaining budget so user sees the context */}
             <span className="balance-text">
-                Budget: ₹<span className={`text-${handleWarning()}`}>{currentBudget}</span>
+                Budget Left: ₹<span className={`text-${handleWarning()}`}>{currentBudget}</span> / ₹{budget}
             </span>
             <span className="balance-text">Expense: ₹{totalExpense}</span>
         </div>
@@ -43,50 +55,61 @@ const BudgetSummary = ({ currentBudget, totalExpense, showInput, setShowInput, h
 );
 
 const BudgetInitialization = () => {
-
     const { setForm, showInput, setShowInput, transaction, getPastSevenDaysTotal, getPastMonthTotal } = useTransactions();
-    const { budget, setBudget, budgetInput, setBudgetInput, currentBudget, totalExpense } = useBudget();
+    
+    // 2. Extracted your updated backend elements from your context
+    const { budget, updateBudget, budgetInput, currentBudget, totalExpense } = useBudget();
+    const [loading, setLoading] = useState(false);
 
-    const percentage = (currentBudget / budget) * 100;
+    const percentage = budget > 0 ? (currentBudget / budget) * 100 : 0;
+    
     const handleWarning = () => {
-        if(percentage < 50){
-            return "danger";
-        }
-        else if(percentage < 75){
-            return "warning";
-        }
-        else{
-            return "success";
+        if(percentage < 50) return "danger";
+        if(percentage < 75) return "warning";
+        return "success";
+    }
+
+    // 3. New asynchronous handler to bridge UI to your MongoDB update route
+    const handleBudgetSubmit = async (amount) => {
+        setLoading(true);
+        try {
+            await updateBudget(amount); // Hits PUT /api/auth/update-budget
+            setForm(true); // Opens up the basic form view options on success
+        } catch (err) {
+            alert("Failed to save budget. Please try again.");
+        } finally {
+            setLoading(false);
         }
     }
 
-
-    const handleForms = () => {
-        setBudgetInput(false)
-        setForm(true)
-    }
-    return(
+    return (
         <>
             {budgetInput ? (
-                    <BudgetSetup budget={budget} setBudget={setBudget} handleForms={handleForms} />
+                <BudgetSetup handleBudgetSubmit={handleBudgetSubmit} loading={loading} />
             ) : (
                 <>
-                        <BudgetSummary currentBudget={currentBudget} totalExpense={totalExpense} showInput={showInput} setShowInput={setShowInput} handleWarning={handleWarning} />
+                    <BudgetSummary 
+                        budget={budget}
+                        currentBudget={currentBudget} 
+                        totalExpense={totalExpense} 
+                        showInput={showInput} 
+                        setShowInput={setShowInput} 
+                        handleWarning={handleWarning} 
+                    />
                         
                     {!showInput && (
-                    <>
-                    <div className="stats-container">
-                        <div className="stat-card">
-                            <span className="stat-title">Weekly Spendings</span>
+                        <div className="stats-container">
+                            <div className="stat-card">
+                                <span className="stat-title">Weekly Spendings</span>
                                 <span className="stat-value">₹{getPastSevenDaysTotal()}</span>
+                            </div>
+                            <CategoryChart />
+                            <div className="stat-card">
+                                <span className="stat-title">Monthly Spendings</span>
+                                <span className="stat-value">₹{getPastMonthTotal(transaction)}</span>
+                            </div>
                         </div>
-                        <CategoryChart />
-                        <div className="stat-card">
-                            <span className="stat-title">Monthly Spendings</span>
-                            <span className="stat-value">₹{getPastMonthTotal(transaction)}</span>
-                        </div>
-                    </div>
-                    </>)}
+                    )}
                 </>
             )}
         </>
